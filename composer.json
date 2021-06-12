@@ -1,5 +1,15 @@
 {
+    "name": "PrintNow/jiayu-hydropower-query",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Wenzhou Chan",
+            "email": "chenwenzhou@aliyun.com"
+        }
+    ],
     "require": {
+        "php": ">=5.5.0",
         "guzzlehttp/guzzle": "~6.0"
     }
 }
