@@ -23,17 +23,9 @@ class JiayuAPI extends JiayuAPIConst
      */
     private $authToken = '';
 
-    /**
-     * 设置验证 Token，返回当前实例
-     *
-     * @return JiayuAPI $this
-     *
-     * @author: Chuwen <wenzhouchan@gmail.com>
-     * @date  : 2021/6/12 23:59
-     */
-    public function setAuthToken(): JiayuAPI
+    public function __construct(string $authToken)
     {
-        return $this;
+        $this->authToken = $authToken;
     }
 
     /**
@@ -126,7 +118,7 @@ class JiayuAPI extends JiayuAPIConst
      * @throws RequestResultIsEmptyException
      * @throws RequestResultErrorException
      */
-    private function requestAPI(string $url, ?array $postParam = null): array
+    private function requestAPI(string $url, array $postParam = null): array
     {
         $isPost = !empty(current($postParam));
 
