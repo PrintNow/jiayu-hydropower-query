@@ -6,15 +6,33 @@
 
 namespace app\library;
 
-include dirname(__DIR__) . "/functions.php";
+require_once __DIR__ . "/AES.php";
+require_once __DIR__ . "/JiayuAPI.php";
 
 class Jiayu
 {
     private $AESInstance;
 
-    public function __construct(AES $AESInstance)
+    // 登录成功后才会有的这些参数
+    private $userId = '';
+    private $userName = '';
+    private $token = '';
+
+    /**
+     * Jiayu constructor.
+     *
+     * @param AES   $AESInstance
+     * @param array $loginData
+     */
+    public function __construct($AESInstance, array $loginData = [])
     {
         $this->AESInstance = $AESInstance;
+
+        if (!empty($loginData)) {
+            $this->userId = $loginData['userId'] ?? '';
+            $this->userName = $loginData['userName'] ?? '';
+            $this->token = $loginData['token'] ?? '';
+        }
     }
 
     /**
@@ -28,20 +46,21 @@ class Jiayu
      */
     public function login(string $userPhone, string $password)
     {
-        $instance = new JiayuAPI(null);
+        $instance = new JiayuAPI('');
 
         try {
             $res = $instance->userLogin($userPhone, $password);
 
-            if (empty($res['userId']) || empty($res['userName']) || empty($res['token'])) {
+            if (empty($res['data'])) returnJson(404, '相关字段不存在，登录失败，请稍后再试');
+            if (empty($res['data']['userId']) || empty($res['data']['userName']) || empty($res['data']['token'])) {
                 returnJson(404, '相关字段不存在，登录失败，请稍后再试');
             }
 
             setcookie('token', $this->AESInstance::encrypt([
-                'userId' => $res['userId'],
-                'userName' => $res['userName'],
-                'token' => $res['token'],
-            ]), 86400 * 7);
+                'userId' => $res['data']['userId'],
+                'userName' => $res['data']['userName'],
+                'token' => $res['data']['token'],
+            ]), time() + (86400 * 7));
 
             returnJson(0, '登录成功');
         } catch (exception\RequestResultErrorException $e) {
