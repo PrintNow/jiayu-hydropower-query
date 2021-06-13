@@ -17,6 +17,7 @@
  */
 function returnJson(int $code = 0, string $msg = 'ok', array $data = [])
 {
+    header("Content-type: application/json; charset=UTF-8");
     die(json_encode([
         'code' => $code,
         'msg' => $msg,
