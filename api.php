@@ -66,3 +66,11 @@ if ($loginData['expire'] < time()) {
 }
 
 $JiayuInstance = new Jiayu($AESInstance, $loginData);
+
+switch ($type) {
+    case 'get-room-list':
+        $JiayuInstance->getRoomList();
+        break;
+    default:
+        returnJson(404, '此接口不存在，请检查');
+}
