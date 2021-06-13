@@ -96,4 +96,46 @@ class Jiayu
             returnJson($e->getCode(), $e->getMessage());
         }
     }
+
+    /**
+     * 获取水费账单<以1天的维度>
+     *
+     * @author: Chuwen <wenzhouchan@gmail.com>
+     * @date  : 2021/6/14 01:01
+     */
+    public function getWaterBill(int $roomId, int $page = 1, int $pageSize = 20)
+    {
+        if ($pageSize == 0 || $pageSize % 5 !== 0) returnJson(201, '请传入5的倍数');
+
+        try {
+            $res = $this->JiayuInstance->getWaterBill($roomId, $page, $pageSize);
+
+            //TODO 计算一天的用水量
+
+            returnJson(0, 'ok', $res['data']);
+        } catch (Exception $e) {
+            returnJson($e->getCode(), $e->getMessage());
+        }
+    }
+
+    /**
+     * 获取电费账单<以1天的维度>
+     *
+     * @author: Chuwen <wenzhouchan@gmail.com>
+     * @date  : 2021/6/14 01:01
+     */
+    public function getElectricBill(int $roomId, int $page = 1, int $pageSize = 20)
+    {
+        if ($pageSize == 0 || $pageSize % 5 !== 0) returnJson(201, '请传入5的倍数');
+
+        try {
+            $res = $this->JiayuInstance->getElectricBill($roomId, $page, $pageSize);
+
+            //TODO 计算一天的用电量
+
+            returnJson(0, 'ok', $res['data']);
+        } catch (Exception $e) {
+            returnJson($e->getCode(), $e->getMessage());
+        }
+    }
 }

@@ -66,10 +66,21 @@ if ($loginData['expire'] < time()) {
 }
 
 $JiayuInstance = new Jiayu($AESInstance, $loginData);
+$roomId = $_GET['roomId'] ?? '';
+$page = $_GET['page'] ?? 1;
+$pageSize = $_GET['pageSize'] ?? 35;
 
 switch ($type) {
     case 'get-room-list':
         $JiayuInstance->getRoomList();
+        break;
+    case 'get-water-bill':
+        if (empty($roomId)) returnJson(201, '房间号不能为空！');
+        $JiayuInstance->getWaterBill(intval($roomId), intval($page), intval($pageSize));
+        break;
+    case 'get-electric-bill':
+        if (empty($roomId)) returnJson(201, '房间号不能为空！');
+        $JiayuInstance->getElectricBill(intval($roomId), intval($page), intval($pageSize));
         break;
     default:
         returnJson(404, '此接口不存在，请检查');
