@@ -9,6 +9,10 @@ namespace app\library;
 use app\library\exception\RequestResultErrorException;
 use app\library\exception\RequestResultIsEmptyException;
 
+require_once __DIR__ . "/JiayuAPIConst.php";
+require_once __DIR__ . "/exception/RequestResultErrorException.php";
+require_once __DIR__ . "/exception/RequestResultIsEmptyException.php";
+
 /**
  * Class JiayuAPI
  *
@@ -117,8 +121,9 @@ class JiayuAPI extends JiayuAPIConst
      * @return array
      * @throws RequestResultIsEmptyException
      * @throws RequestResultErrorException
+     * @noinspection PhpMissingParamTypeInspection
      */
-    private function requestAPI(string $url, array $postParam = null): array
+    private function requestAPI(string $url, $postParam = null): array
     {
         $isPost = !empty(current($postParam));
 
