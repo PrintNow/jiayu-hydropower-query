@@ -4,6 +4,27 @@
  * @date   2021/6/13 23:13
  */
 
+
+/**
+ * 终止程序运行，并输出 JSON 数据
+ *
+ * @param int    $code 状态吗
+ * @param string $msg  消息
+ * @param array  $data 额外数据
+ *
+ * @author: Chuwen <wenzhouchan@gmail.com>
+ * @date  : 2021/6/13 23:48
+ */
+function returnJson(int $code = 0, string $msg = 'ok', array $data = [])
+{
+    die(json_encode([
+        'code' => $code,
+        'msg' => $msg,
+        'data' => $data,
+    ], JSON_UNESCAPED_UNICODE));
+}
+
+
 /**
  * 生成GUID
  *
