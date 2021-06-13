@@ -18,6 +18,8 @@ class Jiayu
     private $userName = '';
     private $token = '';
 
+    private $JiayuInstance;
+
     /**
      * Jiayu constructor.
      *
@@ -32,6 +34,10 @@ class Jiayu
             $this->userId = $loginData['userId'] ?? '';
             $this->userName = $loginData['userName'] ?? '';
             $this->token = $loginData['token'] ?? '';
+
+            $this->JiayuInstance = new JiayuAPI($this->token);
+        } else {
+            $this->JiayuInstance = new JiayuAPI('');
         }
     }
 
@@ -46,10 +52,8 @@ class Jiayu
      */
     public function login(string $userPhone, string $password)
     {
-        $instance = new JiayuAPI('');
-
         try {
-            $res = $instance->userLogin($userPhone, $password);
+            $res = $this->JiayuInstance->userLogin($userPhone, $password);
 
             if (empty($res['data'])) returnJson(404, '相关字段不存在，登录失败，请稍后再试');
             if (empty($res['data']['userId']) || empty($res['data']['userName']) || empty($res['data']['token'])) {
@@ -73,5 +77,10 @@ class Jiayu
         }
 
         returnJson(405, '错误：无下文');
+    }
+
+    public function getRoomList()
+    {
+
     }
 }
