@@ -4,6 +4,8 @@
  * @date   2021/6/13 23:30
  */
 
+namespace app\library;
+
 class AES
 {
     //设置AES秘钥
@@ -17,12 +19,16 @@ class AES
     /**
      * 加密
      *
-     * @param string $str 要加密的数据
+     * @param string|array $str 要加密的数据
      *
      * @return string   加密后的数据
      */
-    public static function encrypt(string $str): string
+    public static function encrypt($str): string
     {
+        if (is_array($str)) {
+            $str = json_encode($str, JSON_UNESCAPED_UNICODE);
+        }
+
         $data = openssl_encrypt($str, 'AES-128-ECB', self::$aes_key, OPENSSL_RAW_DATA);
         return base64_encode($data);
     }
