@@ -5,14 +5,16 @@
  */
 
 use app\library\AES;
+use app\library\Jiayu;
 
 const APP_PATH = __DIR__ . "/app/";
 const APP_CONFIG_PATH = APP_PATH . "/config/";
 const APP_LIB_PATH = APP_PATH . "/library/";
 const DEFAULT_APP_KEY = "KBhxqLqV8Z4ti9xgYB3UnCqtdpKM";
 
-include APP_PATH . "functions.php";
-include APP_LIB_PATH . "AES.php";
+require_once APP_PATH . "functions.php";
+require_once APP_LIB_PATH . "AES.php";
+require_once APP_LIB_PATH . "Jiayu.php";
 
 $app_config = include APP_CONFIG_PATH . "/app.php";
 
@@ -32,6 +34,26 @@ if ($app_config['key'] === DEFAULT_APP_KEY) {
 }
 
 $AESInstance = new AES(APP_KEY);
+
+//GET 参数
+$type = $_GET['type'] ?? '';
+
+// 账号登录
+if ($type === 'login') {
+    $JiayuInstance = new Jiayu($AESInstance);
+
+    $userPhone = $_POST['userPhone'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+
+    if (empty($userPhone) || empty($password)) {
+        returnJson(401, '账号或密码不能为空哦！');
+    }
+
+    $JiayuInstance->login($userPhone, $password);
+}
+
+
 $token = $AESInstance::decrypt($_COOKIE['token'] ?? '');
 
 if (empty($token)) {
@@ -42,3 +64,5 @@ $token = json_decode($token, true);
 if ($token['expire'] < time()) {
     returnJson(401, 'Token 过期，请重新登录');
 }
+
+$JiayuInstance = new Jiayu($AESInstance, $token);
