@@ -54,15 +54,15 @@ if ($type === 'login') {
 }
 
 
-$token = $AESInstance::decrypt($_COOKIE['token'] ?? '');
+$loginData = $AESInstance::decrypt($_COOKIE['token'] ?? '');
 
-if (empty($token)) {
+if (empty($loginData)) {
     returnJson(403, '未登录，请先登录');
 }
 
-$token = json_decode($token, true);
-if ($token['expire'] < time()) {
+$loginData = json_decode($loginData, true);
+if ($loginData['expire'] < time()) {
     returnJson(401, 'Token 过期，请重新登录');
 }
 
-$JiayuInstance = new Jiayu($AESInstance, $token);
+$JiayuInstance = new Jiayu($AESInstance, $loginData);
