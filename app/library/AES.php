@@ -23,7 +23,7 @@ class AES
      *
      * @return string   加密后的数据
      */
-    public function encrypt(string $str): string
+    public static function encrypt(string $str): string
     {
         $data = openssl_encrypt($str, 'AES-128-ECB', self::$aes_key, OPENSSL_RAW_DATA);
         return base64_encode($data);
