@@ -5,5 +5,5 @@
  */
 
 return [
-  'key' => 'KBhxqLqV8Z4ti9xgYB3UnCqtdpKM',//默认是：KBhxqLqV8Z4ti9xgYB3UnCqtdpKM
+    'key' => 'KBhxqLqV8Z4ti9xgYB3UnCqtdpKM',//会随机生成
 ];
