@@ -56,13 +56,16 @@ class Jiayu
                 returnJson(404, '相关字段不存在，登录失败，请稍后再试');
             }
 
-            setcookie('token', $this->AESInstance::encrypt([
+            $token = $this->AESInstance::encrypt([
                 'userId' => $res['data']['userId'],
                 'userName' => $res['data']['userName'],
                 'token' => $res['data']['token'],
-            ]), time() + (86400 * 7));
+            ]);
+            setcookie('token', $token, time() + (86400 * 7));
 
-            returnJson(0, '登录成功');
+            returnJson(0, '登录成功', [
+                'token' => $token,
+            ]);
         } catch (exception\RequestResultErrorException $e) {
             returnJson($e->getCode(), $e->getMessage());
         } catch (exception\RequestResultIsEmptyException $e) {
