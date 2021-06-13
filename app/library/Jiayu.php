@@ -28,7 +28,7 @@ class Jiayu
      */
     public function login(string $userPhone, string $password)
     {
-        $instance = new JiayuAPI();
+        $instance = new JiayuAPI(null);
 
         try {
             $res = $instance->userLogin($userPhone, $password);
