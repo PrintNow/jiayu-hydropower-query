@@ -125,7 +125,10 @@ class JiayuAPI extends JiayuAPIConst
      */
     private function requestAPI(string $url, $postParam = null): array
     {
-        $isPost = !empty(current($postParam));
+        $isPost = false;
+        if (!empty($postParam)) {
+            $isPost = !empty(current($postParam));
+        }
 
         $curl = curl_init();
         $options = [
@@ -161,7 +164,7 @@ class JiayuAPI extends JiayuAPIConst
             throw new RequestResultIsEmptyException('请求佳寓 API 成功，但是返回的内容解析失败', 502, $response);
         }
 
-        if ($response['code'] !== 0) {
+        if (($response['code'] ?? -1) !== 0) {
             throw new RequestResultErrorException($response['message'] ?? '请求失败，无具体原因', $response['code'] ?? 5000);
         }
 
