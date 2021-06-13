@@ -6,6 +6,8 @@
 
 namespace app\library;
 
+use Exception;
+
 require_once __DIR__ . "/AES.php";
 require_once __DIR__ . "/JiayuAPI.php";
 
@@ -60,27 +62,38 @@ class Jiayu
                 returnJson(404, '相关字段不存在，登录失败，请稍后再试');
             }
 
+            $expire = time() + (86400 * 7);
             $token = $this->AESInstance::encrypt([
                 'userId' => $res['data']['userId'],
                 'userName' => $res['data']['userName'],
                 'token' => $res['data']['token'],
+                'expire' => $expire,
             ]);
-            setcookie('token', $token, time() + (86400 * 7));
+            setcookie('token', $token, $expire);
 
             returnJson(0, '登录成功', [
                 'token' => $token,
             ]);
-        } catch (exception\RequestResultErrorException $e) {
-            returnJson($e->getCode(), $e->getMessage());
-        } catch (exception\RequestResultIsEmptyException $e) {
+        } catch (Exception $e) {
             returnJson($e->getCode(), $e->getMessage());
         }
 
         returnJson(405, '错误：无下文');
     }
 
+    /**
+     * 获取房间列表
+     *
+     * @author: Chuwen <wenzhouchan@gmail.com>
+     * @date  : 2021/6/14 00:56
+     */
     public function getRoomList()
     {
-
+        try {
+            $res = $this->JiayuInstance->getRoomList();
+            returnJson(0, 'ok', $res['data']);
+        } catch (Exception $e) {
+            returnJson($e->getCode(), $e->getMessage());
+        }
     }
 }
