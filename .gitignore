@@ -5,3 +5,4 @@ composer.lock
 /vendor/
 /test/
 *.test.php
+/app/cache/*
