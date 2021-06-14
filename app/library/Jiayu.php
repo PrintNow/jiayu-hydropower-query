@@ -107,10 +107,16 @@ class Jiayu
     {
         if ($pageSize == 0 || $pageSize % 5 !== 0) returnJson(201, '请传入5的倍数');
 
+        $data = $this->getCacheData($roomId, 'water');
+        if (!empty($data)) {
+            returnJson(0, 'ok', $data);
+        }
+
         try {
             $res = $this->JiayuInstance->getWaterBill($roomId, $page, $pageSize);
 
             //TODO 计算一天的用水量
+            $this->setCacheData($roomId, 'water', $res['data']);
 
             returnJson(0, 'ok', $res['data']);
         } catch (Exception $e) {
@@ -128,14 +134,75 @@ class Jiayu
     {
         if ($pageSize == 0 || $pageSize % 5 !== 0) returnJson(201, '请传入5的倍数');
 
+        $data = $this->getCacheData($roomId, 'electric');
+        if (!empty($data)) {
+            returnJson(0, 'ok', $data);
+        }
+
         try {
             $res = $this->JiayuInstance->getElectricBill($roomId, $page, $pageSize);
 
             //TODO 计算一天的用电量
+            $this->setCacheData($roomId, 'electric', $res['data']);
 
             returnJson(0, 'ok', $res['data']);
         } catch (Exception $e) {
             returnJson($e->getCode(), $e->getMessage());
         }
+    }
+
+    /**
+     * 设置缓存数据
+     *
+     * @param int    $roomId 房间 ID
+     * @param string $type   类型
+     * @param array  $data   数据
+     *
+     * @return bool
+     *
+     * @author: Chuwen <wenzhouchan@gmail.com>
+     * @date  : 2021/6/14 20:18
+     */
+    private function setCacheData(int $roomId, string $type, array $data): bool
+    {
+        $cachePath = APP_PATH . "/cache/{$roomId}/";
+
+        if (!is_dir($cachePath)) mkdir($cachePath, 0755, true);
+
+        $head = <<<EOT
+<?php
+return
+EOT;
+
+        return !!file_put_contents($cachePath . $type . ".php", $head . " " . var_export($data, true) . ";");
+    }
+
+    /**
+     * 获取缓存的数据
+     *
+     * @param int    $roomId 房间 ID
+     * @param string $type   类型
+     *
+     * @return array
+     *
+     * @author: Chuwen <wenzhouchan@gmail.com>
+     * @date  : 2021/6/14 20:21
+     */
+    private function getCacheData(int $roomId, string $type): array
+    {
+        $cachePath = APP_PATH . "/cache/{$roomId}/{$type}.php";
+        if (!file_exists($cachePath)) return [];
+
+        // 如果文件最后的创建时间+1小时 < 当前时间
+        // 就删除文件，并返回空数组
+        if (filectime($cachePath) + 3600 < time()) {
+            unlink($cachePath);
+            return [];
+        }
+
+        $data = include $cachePath;
+        if (!is_array($data)) return [];
+
+        return $data;
     }
 }
