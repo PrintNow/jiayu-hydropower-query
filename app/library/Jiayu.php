@@ -89,8 +89,16 @@ class Jiayu
      */
     public function getRoomList()
     {
+        $data = $this->getCacheData('room_list');
+        if (!empty($data)) {
+            returnJson(0, 'ok.is cache', $data);
+        }
+
         try {
             $res = $this->JiayuInstance->getRoomList();
+
+            $this->setCacheData('room_list', $res['data']);
+
             returnJson(0, 'ok', $res['data']);
         } catch (Exception $e) {
             returnJson($e->getCode(), $e->getMessage());
@@ -107,16 +115,16 @@ class Jiayu
     {
         if ($pageSize == 0 || $pageSize % 5 !== 0) returnJson(201, '请传入5的倍数');
 
-        $data = $this->getCacheData($roomId, 'water');
+        $data = $this->getCacheData($roomId . '_water');
         if (!empty($data)) {
-            returnJson(0, 'ok', $data);
+            returnJson(0, 'ok.is cache', $data);
         }
 
         try {
             $res = $this->JiayuInstance->getWaterBill($roomId, $page, $pageSize);
 
             //TODO 计算一天的用水量
-            $this->setCacheData($roomId, 'water', $res['data']);
+            $this->setCacheData($roomId . '_water', $res['data']);
 
             returnJson(0, 'ok', $res['data']);
         } catch (Exception $e) {
@@ -134,16 +142,16 @@ class Jiayu
     {
         if ($pageSize == 0 || $pageSize % 5 !== 0) returnJson(201, '请传入5的倍数');
 
-        $data = $this->getCacheData($roomId, 'electric');
+        $data = $this->getCacheData($roomId . '_electric');
         if (!empty($data)) {
-            returnJson(0, 'ok', $data);
+            returnJson(0, 'ok.is cache', $data);
         }
 
         try {
             $res = $this->JiayuInstance->getElectricBill($roomId, $page, $pageSize);
 
             //TODO 计算一天的用电量
-            $this->setCacheData($roomId, 'electric', $res['data']);
+            $this->setCacheData($roomId . '_electric', $res['data']);
 
             returnJson(0, 'ok', $res['data']);
         } catch (Exception $e) {
@@ -154,18 +162,17 @@ class Jiayu
     /**
      * 设置缓存数据
      *
-     * @param int    $roomId 房间 ID
-     * @param string $type   类型
-     * @param array  $data   数据
+     * @param string $type 类型
+     * @param array  $data 数据
      *
      * @return bool
      *
      * @author: Chuwen <wenzhouchan@gmail.com>
      * @date  : 2021/6/14 20:18
      */
-    private function setCacheData(int $roomId, string $type, array $data): bool
+    private function setCacheData(string $type, array $data): bool
     {
-        $cachePath = APP_PATH . "/cache/{$roomId}/";
+        $cachePath = APP_PATH . "/cache/{$this->userId}/";
 
         if (!is_dir($cachePath)) mkdir($cachePath, 0755, true);
 
@@ -180,17 +187,16 @@ EOT;
     /**
      * 获取缓存的数据
      *
-     * @param int    $roomId 房间 ID
-     * @param string $type   类型
+     * @param string $type 类型
      *
      * @return array
      *
      * @author: Chuwen <wenzhouchan@gmail.com>
      * @date  : 2021/6/14 20:21
      */
-    private function getCacheData(int $roomId, string $type): array
+    private function getCacheData(string $type): array
     {
-        $cachePath = APP_PATH . "/cache/{$roomId}/{$type}.php";
+        $cachePath = APP_PATH . "/cache/{$this->userId}/{$type}.php";
         if (!file_exists($cachePath)) return [];
 
         // 如果文件最后的创建时间+1小时 < 当前时间
