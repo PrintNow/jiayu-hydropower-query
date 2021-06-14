@@ -7,3 +7,8 @@
 .room-list-wrap .mdui-radio:last-child {
   margin-bottom: 0;
 }
+
+#electric-wrap, #water-wrap {
+  height: 400px;
+  padding-top: 16px;
+}
