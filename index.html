@@ -12,7 +12,7 @@
   />
   <link rel="stylesheet" href="assets/style.css">
 </head>
-<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-theme-layout-auto mdui-p-t-2">
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-theme-layout-auto">
 
 <div class="mdui-container">
   <div class="mdui-row">
@@ -53,28 +53,16 @@
           <div class="mdui-panel-item-body">
 
             <form class="mdui-m-t-2">
-              <label class="mdui-radio">
-                <input type="radio" name="room-list" checked/>
-                <i class="mdui-radio-icon"></i>
-                <div class="room-item mdui-typo">
-                  <div class="room-position">
-                    佳寓·深圳下雪店
-                  </div>
-                  <div class="room-id">
-                    房间号：<a>D3X2-306</a>
-                  </div>
-                </div>
-              </label>
-
-              <label class="mdui-radio">
+              <!--仅作为参照-->
+              <label class="mdui-radio mdui-hidden">
                 <input type="radio" name="room-list"/>
                 <i class="mdui-radio-icon"></i>
                 <div class="room-item mdui-typo">
                   <div class="room-position">
-                    佳寓·深圳下雪店
+                    佳寓·深圳奈雪店
                   </div>
                   <div class="room-id">
-                    房间号：<a>D3X1-301</a>
+                    房间号：<a>666</a>
                   </div>
                 </div>
               </label>
@@ -86,7 +74,7 @@
       <!--水电费显示容器-->
       <div class="hydropower-wrap">
         <div class="mdui-panel-item mdui-panel-item-open">
-          <div class="mdui-panel-item-header mdui-color-indigo">电费水费折线图</div>
+          <div class="mdui-panel-item-header mdui-color-indigo">可视化图表📈</div>
           <div class="mdui-panel-item-body">
             <!--电费显示区域-->
             <div id="electric-wrap">
@@ -109,6 +97,8 @@
         integrity="sha256-TI0rIaxop+pDlHNVI6kDCFvmpxNYUnVH/SMjknZ/W0Y=" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
 <script src="assets/echarts.theme.js"></script>
+<!--suppress JSUnresolvedVariable -->
+<script>const $ = mdui.$;</script>
 <script src="assets/script.js"></script>
 </body>
 </html>
