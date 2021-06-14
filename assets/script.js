@@ -83,8 +83,14 @@ const electricOption = option = {
   ]
 }
 
+const $loginDom = $(".login-wrap")
+const $roomListDom = $(".room-list-wrap")
+const $hydropowerDom = $(".hydropower-wrap")
 const $formDom = $(".room-list-wrap form")
+
 getRoomList()
+
+/**************/
 
 /**
  * 获取房间列表
@@ -98,12 +104,13 @@ function getRoomList() {
     },
     dataType: 'json',
     success: function (data) {
-      // 如果没有登录就走这里
-      if (data.code === 403 || data.code === 401) return showLoginWrap()
+      toggleWrap(false)
 
       if (data.code !== 0) return mdui.snackbar({
         message: data.msg || '未知的错误，请刷新界面'
       });
+
+      toggleWrap(true)
 
       $formDom.html('')
       for (let item of data.data.records) {
@@ -131,7 +138,6 @@ function getRoomList() {
         console.log('选择默认的')
         $(`input[type="radio"]`).first().trigger('click');
       }
-      getElectric()
     }
   });
 }
@@ -175,6 +181,20 @@ function getElectric() {
 
 function showLoginWrap() {
 
+}
+
+function toggleWrap(type = false) {
+  //如果登录了，就不显示
+  if (type) {
+    $loginDom.addClass("mdui-hidden")
+    $roomListDom.removeClass("mdui-hidden")
+    $hydropowerDom.removeClass("mdui-hidden")
+  } else {
+    console.log('没有登录')
+    $loginDom.removeClass("mdui-hidden")
+    $roomListDom.addClass("mdui-hidden")
+    $hydropowerDom.addClass("mdui-hidden")
+  }
 }
 
 /**
