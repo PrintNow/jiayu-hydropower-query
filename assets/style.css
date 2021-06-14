@@ -1,0 +1,9 @@
+.room-list-wrap .mdui-radio {
+  display: block;
+  height: unset;
+  margin-bottom: 16px;
+}
+
+.room-list-wrap .mdui-radio:last-child {
+  margin-bottom: 0;
+}
