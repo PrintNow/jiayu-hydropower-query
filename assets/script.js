@@ -168,7 +168,9 @@ function getElectric() {
     dataType: 'json',
     success: function (data) {
       // 如果没有登录就走这里
-      if (data.code === 403 || data.code === 401) return showLoginWrap()
+      if (data.code === 403 || data.code === 401) {
+        toggleWrap(false)
+      }
 
       if (data.code !== 0) return mdui.snackbar({
         message: data.msg || '未知的错误，请刷新界面'
@@ -179,8 +181,37 @@ function getElectric() {
   })
 }
 
-function showLoginWrap() {
+/**
+ * 登录
+ * @param e
+ */
+function login(e) {
+  console.log(e.disabled)
+  e.disabled = true
 
+  $.ajax({
+    method: 'POST',
+    url: 'api.php?type=login',
+    data: {
+      userPhone: $("#phone").val(),
+      password: $("#password").val(),
+    },
+    dataType: 'json',
+    success: function (data) {
+      if (data.code !== 0) return mdui.snackbar({
+        message: data.msg || '未知的错误，请刷新界面'
+      });
+
+      toggleWrap(true)
+      mdui.snackbar({
+        message: '登录成功！'
+      });
+      getRoomList()
+    },
+    complete() {
+      e.disabled = false
+    }
+  })
 }
 
 function toggleWrap(type = false) {
